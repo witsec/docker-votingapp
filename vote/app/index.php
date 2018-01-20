@@ -4,7 +4,7 @@ if (isset($_POST["vote"]) && in_array($_POST["vote"], ["a", "b"])) {
 	$v = $_POST["vote"];
 
 	// Connect to DB
-	$db = pg_connect("host=172.17.0.3 dbname=postgres user=postgres") or die("Not really working for some reason");
+	$db = pg_connect("host=db dbname=postgres user=postgres") or die("Not really working for some reason");
 
 	// Create table if it doesn't yet exist
 	$q = "CREATE TABLE IF NOT EXISTS votes (id SERIAL primary key, vote VARCHAR(1) NOT NULL)";
