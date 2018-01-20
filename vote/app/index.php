@@ -4,21 +4,21 @@ if (isset($_POST["vote"]) && in_array($_POST["vote"], ["a", "b"])) {
 	$v = $_POST["vote"];
 
 	// Connect to DB
-	$db = pg_connect("host=db dbname=postgres user=postgres") or die("Error connecting to database server: " . pg_last_error());
+	$db = pg_connect("host=172.17.0.3 dbname=postgres user=postgres") or die("Not really working for some reason");
 
 	// Create table if it doesn't yet exist
 	$q = "CREATE TABLE IF NOT EXISTS votes (id SERIAL primary key, vote VARCHAR(1) NOT NULL)";
 	$r = pg_query($q) or die("Query failed: " . pg_last_error());
 
 	// UPDATE
-	if (isset($_COOKIE["vote_id"])) {
-		$q = "UPDATE votes SET vote = '" . $v . "' WHERE id = " . $vid;
-		$r = pg_query($query) or die('Query failed: ' . pg_last_error());
+	if (isset($_COOKIE["vote_id"]) && is_numeric($_COOKIE["vote_id"])) {
+		$q = "UPDATE votes SET vote = '" . $v . "' WHERE id = " . $_COOKIE["vote_id"];
+		$r = pg_query($q) or die('Query failed: ' . pg_last_error());
 	}
 	// INSERT
 	else {
-		$q = "INSERT INTO vote (vote) VALUES ('" . $v . "') RETURNING id";
-		$r = pg_query($query) or die('Query failed: ' . pg_last_error());
+		$q = "INSERT INTO votes (vote) VALUES ('" . $v . "') RETURNING id";
+		$r = pg_query($q) or die('Query failed: ' . pg_last_error());
 		$id = pg_fetch_row($r)[0];
 		setcookie("vote_id", $id);
 	}
@@ -56,29 +56,27 @@ if (isset($_POST["vote"]) && in_array($_POST["vote"], ["a", "b"])) {
 				<button id="b" type="submit" name="vote" class="b" value="b">LAME</button>
 			</form>
 			<div id="tip">(Tip: you can change your vote)</div>
-			<div id="hostname">Processed by container ID {{hostname}}</div>
+			<div id="hostname">Processed by container ID <?=gethostname();?></div>
 		</div>
 	</div>
 	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
 	<?php
-	if (isset($_COOKIE["vote"]) && in_array($_POST["vote"], ["a", "b"])) {
+	if (isset($_COOKIE["vote"]) && in_array($_COOKIE["vote"], ["a", "b"])) {
 		?>
 		<script>
-		if (cookie) {
-			var vote = "<?=$v;?>";
+		var vote = "<?=$_COOKIE["vote"];?>";
 
-			if(vote == "a"){
-				$(".a").prop('disabled', true);
-				$(".a").html('AWESOME <i class="fa fa-check-circle"></i>');
-				$(".b").css('opacity','0.5');
-			}
-			if(vote == "b"){
-				$(".b").prop('disabled', true);
-				$(".b").html('LAME <i class="fa fa-check-circle"></i>');
-				$(".a").css('opacity','0.5');
-			}
+		if(vote == "a"){
+			$(".a").prop('disabled', true);
+			$(".a").html('AWESOME <i class="fa fa-check-circle"></i>');
+			$(".b").css('opacity','0.5');
+		}
+		if(vote == "b"){
+			$(".b").prop('disabled', true);
+			$(".b").html('LAME <i class="fa fa-check-circle"></i>');
+			$(".a").css('opacity','0.5');
 		}
 		</script>
 		<?php
