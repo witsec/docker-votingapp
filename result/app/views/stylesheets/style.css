@@ -12,6 +12,7 @@ html,body{
 body{
   opacity:0;
   transition: all 1s linear;
+  overflow: hidden;
 }
 
 .divider{
