@@ -26,7 +26,7 @@ services:
   result:
     image: witsec/votingapp_result:latest
     ports:
-      - 5001:80
+      - 6000:80
     networks:
       - backend
     depends_on:
@@ -39,7 +39,7 @@ services:
   visualizer:
     image: dockersamples/visualizer:stable
     ports:
-      - 5050:8080
+      - 7000:8080
     stop_grace_period: 1m30s
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
