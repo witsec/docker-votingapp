@@ -20,8 +20,6 @@ services:
       - db
     deploy:
       replicas: 4
-      restart_policy:
-        condition: on-failure
 
   result:
     image: witsec/votingapp_result:latest
@@ -33,8 +31,6 @@ services:
       - db
     deploy:
       replicas: 1
-      restart_policy:
-        condition: on-failure
 
   visualizer:
     image: dockersamples/visualizer:stable
