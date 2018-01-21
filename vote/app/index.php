@@ -1,14 +1,15 @@
 <?php
+// Connect to DB
+$db = pg_connect("host=db dbname=postgres user=postgres") or die("Not really working for some reason");
+
+// Create table if it doesn't yet exist
+$q = "CREATE TABLE IF NOT EXISTS votes (id SERIAL primary key, vote VARCHAR(1) NOT NULL)";
+$r = pg_query($q) or die("Query failed: " . pg_last_error());
+
+
 // Handle the POST
 if (isset($_POST["vote"]) && in_array($_POST["vote"], ["a", "b"])) {
 	$v = $_POST["vote"];
-
-	// Connect to DB
-	$db = pg_connect("host=db dbname=postgres user=postgres") or die("Not really working for some reason");
-
-	// Create table if it doesn't yet exist
-	$q = "CREATE TABLE IF NOT EXISTS votes (id SERIAL primary key, vote VARCHAR(1) NOT NULL)";
-	$r = pg_query($q) or die("Query failed: " . pg_last_error());
 
 	// UPDATE
 	if (isset($_COOKIE["vote_id"]) && is_numeric($_COOKIE["vote_id"])) {
