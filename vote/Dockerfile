@@ -5,7 +5,7 @@ RUN yum update -y && \
     yum install -y php php-pgsql httpd && \
     yum clean all
 
-COPY app/* /var/www/html/
+COPY app/ /var/www/html/
 
 EXPOSE 80
 
